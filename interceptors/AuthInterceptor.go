@@ -27,7 +27,7 @@ func AuthInterceptor(allowedCredentials AllowedCredentials) grpc.UnaryServerInte
 
 		clientKeyCollection, foundKey := md["client_key"]
 		if !foundKey {
-			logger.WithField("client_id", clientId).Error()
+			logger.WithField("client_id", clientId).Error("Invalid attempt to authenticate without the key!")
 			return nil, status.Error(codes.Unauthenticated, "Request does not contain client key as metadata")
 		}
 		clientKey := clientKeyCollection[0]
