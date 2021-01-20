@@ -10,7 +10,7 @@ import (
 	"path"
 )
 
-type ctxLoggerMarker struct{}
+type CtxLoggerMarker struct{}
 
 type CtxLogger struct {
 	log *logrus.Entry
