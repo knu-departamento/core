@@ -11,7 +11,7 @@ import (
 
 type AllowedCredentials map[string]string
 
-func AuthInterceptor(allowedCredentials AllowedCredentials) grpc.UnaryServerInterceptor {
+func AuthUnaryInterceptor(allowedCredentials AllowedCredentials) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
@@ -27,14 +27,14 @@ func AuthInterceptor(allowedCredentials AllowedCredentials) grpc.UnaryServerInte
 
 		clientKeyCollection, foundKey := md["client_key"]
 		if !foundKey {
-			logger.WithField("client_id", clientId).Error("Invalid attempt to authenticate without the key!")
+			logger.WithField("client_id", clientId).Warn("Invalid attempt to authenticate without the key")
 			return nil, status.Error(codes.Unauthenticated, "Request does not contain client key as metadata")
 		}
 		clientKey := clientKeyCollection[0]
 
 		authenticated := allowedCredentials[clientId] == clientKey
 		if !authenticated {
-			logger.WithField("client_id", clientId).Warn("Invalid attempt to authenticate!")
+			logger.WithField("client_id", clientId).Warn("Invalid attempt to authenticate")
 			return nil, status.Error(codes.Unauthenticated, "Invalid credentials")
 		}
 
