@@ -13,7 +13,7 @@ import (
 type CtxLoggerMarker struct{}
 
 type CtxLogger struct {
-	log *logrus.Entry
+	Log *logrus.Entry
 }
 
 func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
