@@ -31,6 +31,6 @@ func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 		"grpc.method":  method,
 	})
 
-	newCtx := context.WithValue(ctx, ctxLoggerMarker{}, CtxLogger{log})
+	newCtx := context.WithValue(ctx, CtxLoggerMarker{}, CtxLogger{log})
 	return handler(newCtx, req)
 }
