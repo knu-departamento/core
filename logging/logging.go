@@ -20,9 +20,7 @@ func SetupLog() error {
 	}
 
 	logrus.SetOutput(ioutil.Discard)
-	logrus.SetFormatter(&nested.Formatter{
-		HideKeys: true,
-	})
+	logrus.SetFormatter(&nested.Formatter{})
 	logrus.AddHook(&WriterHook{ // Send logrus with level higher than warning to stderr
 		Writer: io.MultiWriter(os.Stderr, errorFile),
 		LogLevels: []logrus.Level{

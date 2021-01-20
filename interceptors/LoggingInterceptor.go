@@ -24,11 +24,9 @@ func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 	service := path.Dir(info.FullMethod)[1:]
 	method := path.Base(info.FullMethod)
 	log := logrus.WithFields(logrus.Fields{
-		"trace_id":     md.Get("trace_id")[0],
-		"system":       "grpc",
-		"span.kind":    "server",
 		"grpc.service": service,
 		"grpc.method":  method,
+		"trace_id":     md.Get("trace_id")[0],
 	})
 
 	newCtx := context.WithValue(ctx, CtxLoggerMarker{}, CtxLogger{log})
