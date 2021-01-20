@@ -29,6 +29,11 @@ func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 		"trace_id":     md.Get("trace_id")[0],
 	})
 
+	log.Infof("Received %s request", method)
 	newCtx := context.WithValue(ctx, CtxLoggerMarker{}, CtxLogger{log})
-	return handler(newCtx, req)
+	res, err := handler(newCtx, req)
+	if err == nil {
+		log.Infof("Successfully finished %s request", method)
+	}
+	return res, err
 }
