@@ -9,6 +9,10 @@ import (
 )
 
 func SetupLog() error {
+	if _, err := os.Stat("logs"); os.IsNotExist(err) {
+		os.Mkdir("logs", 0700)
+	}
+
 	errorFile, err := os.OpenFile("logs/errors.log", os.O_CREATE|os.O_RDWR, 0755)
 	if err != nil {
 		return err
