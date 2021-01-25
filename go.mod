@@ -1,4 +1,4 @@
-module github.com/knu-departamento/HelperLib
+module github.com/knu-departamento/core
 
 go 1.15
 
