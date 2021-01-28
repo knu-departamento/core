@@ -53,7 +53,7 @@ func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 		return nil, errors.New("invalid token")
 	}
 
-	if !(!claims.VerifyIssuer("departamento", true) || claims.VerifyIssuedAt(time.Now().Unix(), true) || claims.VerifyExpiresAt(time.Now().Unix(), true) || claims["lvl"] != "account" || claims["typ"] != "refresh") {
+	if !(!claims.VerifyIssuer("departamento", true) || claims.VerifyIssuedAt(time.Now().Unix(), true) || claims.VerifyExpiresAt(time.Now().Unix(), true) || claims["typ"] != "refresh") {
 		return nil, errors.New("invalid token")
 	}
 
