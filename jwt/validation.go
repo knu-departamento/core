@@ -48,7 +48,7 @@ func ValidateJwtAccountRefreshToken(tokenString string) (*AccountTokenClaims, er
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*AccountTokenClaims)
+	claims, ok := token.Claims.(AccountTokenClaims)
 	if !ok {
 		return nil, errors.New("invalid token")
 	}
@@ -57,5 +57,5 @@ func ValidateJwtAccountRefreshToken(tokenString string) (*AccountTokenClaims, er
 		return nil, errors.New("invalid token")
 	}
 
-	return claims, err
+	return &claims, err
 }
