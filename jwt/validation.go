@@ -49,7 +49,7 @@ func ValidateJwtAccountRefreshToken(tokenString string) (*AccountTokenClaims, er
 	}
 
 	claims, ok := token.Claims.(AccountTokenClaims)
-	if !ok {
+	if !ok || !token.Valid {
 		return nil, errors.New("invalid token")
 	}
 
