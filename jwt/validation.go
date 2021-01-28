@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ValidateJwtAccountAccessToken(tokenString string) (*AccountTokenClaims, error) {
+func ValidateJwtAccountAccessToken(tokenString string) (*jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -22,19 +22,19 @@ func ValidateJwtAccountAccessToken(tokenString string) (*AccountTokenClaims, err
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*AccountTokenClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, errors.New("invalid token")
 	}
 
-	if !(!claims.VerifyIssuer("departamento", true) || time.Now().Unix() <= claims.IssuedAt || time.Now().Unix() >= claims.ExpiresAt || claims.Level != "account" || claims.Type != "access") {
+	if !(!claims.VerifyIssuer("departamento", true) || claims.VerifyIssuedAt(time.Now().Unix(), true) || claims.VerifyExpiresAt(time.Now().Unix(), true) || claims["lvl"] != "account" || claims["typ"] != "refresh") {
 		return nil, errors.New("invalid token")
 	}
 
-	return claims, err
+	return &claims, err
 }
 
-func ValidateJwtAccountRefreshToken(tokenString string) (*AccountTokenClaims, error) {
+func ValidateJwtAccountRefreshToken(tokenString string) (*jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -48,12 +48,12 @@ func ValidateJwtAccountRefreshToken(tokenString string) (*AccountTokenClaims, er
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(AccountTokenClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
 		return nil, errors.New("invalid token")
 	}
 
-	if !(!claims.VerifyIssuer("departamento", true) || time.Now().Unix() <= claims.IssuedAt || time.Now().Unix() >= claims.ExpiresAt || claims.Level != "account" || claims.Type != "refresh") {
+	if !(!claims.VerifyIssuer("departamento", true) || claims.VerifyIssuedAt(time.Now().Unix(), true) || claims.VerifyExpiresAt(time.Now().Unix(), true) || claims["lvl"] != "account" || claims["typ"] != "refresh") {
 		return nil, errors.New("invalid token")
 	}
 
