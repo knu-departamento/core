@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ValidateJwtAccountAccessToken(tokenString string) (*jwt.MapClaims, error) {
+func ValidateJwtAccountAccessToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -31,10 +31,10 @@ func ValidateJwtAccountAccessToken(tokenString string) (*jwt.MapClaims, error) {
 		return nil, errors.New("invalid token")
 	}
 
-	return &claims, err
+	return claims, err
 }
 
-func ValidateJwtAccountRefreshToken(tokenString string) (*jwt.MapClaims, error) {
+func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -57,5 +57,5 @@ func ValidateJwtAccountRefreshToken(tokenString string) (*jwt.MapClaims, error) 
 		return nil, errors.New("invalid token")
 	}
 
-	return &claims, err
+	return claims, err
 }
