@@ -23,10 +23,14 @@ func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 	}
 	service := path.Dir(info.FullMethod)[1:]
 	method := path.Base(info.FullMethod)
+	traceId := "null"
+	if len(md.Get("trace_id")) > 0 {
+		traceId = md.Get("trace_id")[0]
+	}
 	log := logrus.WithFields(logrus.Fields{
 		"grpc.service": service,
 		"grpc.method":  method,
-		"trace_id":     md.Get("trace_id")[0],
+		"trace_id":     traceId,
 	})
 
 	log.Infof("Received %s request", method)
