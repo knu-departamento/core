@@ -30,8 +30,8 @@ func ValidateJwtAccountAccessToken(tokenString string) (jwt.MapClaims, error) {
 	correctIssuer := claims.VerifyIssuer("departamento", true)
 	createdBeforeUse := claims.VerifyIssuedAt(time.Now().Unix(), true)
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
-	isAccountToken := claims["typ"].(string) != "acc"
-	if !(!correctIssuer || createdBeforeUse || notExpired || isAccountToken) {
+	isAccountToken := claims["typ"] != interface{}("acc")
+	if !correctIssuer || !createdBeforeUse || !notExpired || !isAccountToken {
 		return nil, errors.New("invalid token")
 	}
 
@@ -60,8 +60,8 @@ func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 	correctIssuer := claims.VerifyIssuer("departamento", true)
 	createdBeforeUse := claims.VerifyIssuedAt(time.Now().Unix(), true)
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
-	isRefreshToken := claims["typ"].(string) != "ref"
-	if !(!correctIssuer || createdBeforeUse || notExpired || isRefreshToken) {
+	isRefreshToken := claims["typ"].(string) != interface{}("ref")
+	if !correctIssuer || !createdBeforeUse || !notExpired || !isRefreshToken {
 		return nil, errors.New("invalid token")
 	}
 
