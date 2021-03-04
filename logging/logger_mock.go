@@ -1,8 +1,13 @@
 package logging
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/mock"
+)
 
-type LoggerMock struct{}
+type LoggerMock struct {
+	mock.Mock
+}
 
 func (l LoggerMock) WithField(key string, value interface{}) *logrus.Entry {
 	return nil
