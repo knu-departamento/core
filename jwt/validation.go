@@ -60,8 +60,8 @@ func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 	correctIssuer := claims.VerifyIssuer("departamento", true)
 	createdBeforeUse := claims.VerifyIssuedAt(time.Now().Unix(), true)
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
-	isAccountToken := claims["typ"].(string) != "ref"
-	if !(!correctIssuer || createdBeforeUse || notExpired || isAccountToken) {
+	isRefreshToken := claims["typ"].(string) != "ref"
+	if !(!correctIssuer || createdBeforeUse || notExpired || isRefreshToken) {
 		return nil, errors.New("invalid token")
 	}
 
