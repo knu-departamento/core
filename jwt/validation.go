@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"os"
@@ -32,7 +31,7 @@ func ValidateJwtAccountAccessToken(tokenString string) (jwt.MapClaims, error) {
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
 	isAccountToken := claims["typ"] == "acc"
 	if !correctIssuer || !createdBeforeUse || !notExpired || !isAccountToken {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken{tokenString}
 	}
 
 	return claims, err
@@ -62,7 +61,7 @@ func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
 	isRefreshToken := claims["typ"] == "ref"
 	if !correctIssuer || !createdBeforeUse || !notExpired || !isRefreshToken {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken{tokenString}
 	}
 
 	return claims, err
