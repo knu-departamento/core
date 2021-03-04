@@ -24,13 +24,13 @@ func ValidateJwtAccountAccessToken(tokenString string) (jwt.MapClaims, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken{tokenString}
 	}
 
 	correctIssuer := claims.VerifyIssuer("departamento", true)
 	createdBeforeUse := claims.VerifyIssuedAt(time.Now().Unix(), true)
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
-	isAccountToken := claims["typ"] == interface{}("acc")
+	isAccountToken := claims["typ"] == "acc"
 	if !correctIssuer || !createdBeforeUse || !notExpired || !isAccountToken {
 		return nil, errors.New("invalid token")
 	}
@@ -54,13 +54,13 @@ func ValidateJwtAccountRefreshToken(tokenString string) (jwt.MapClaims, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken{tokenString}
 	}
 
 	correctIssuer := claims.VerifyIssuer("departamento", true)
 	createdBeforeUse := claims.VerifyIssuedAt(time.Now().Unix(), true)
 	notExpired := claims.VerifyExpiresAt(time.Now().Unix(), true)
-	isRefreshToken := claims["typ"] == interface{}("ref")
+	isRefreshToken := claims["typ"] == "ref"
 	if !correctIssuer || !createdBeforeUse || !notExpired || !isRefreshToken {
 		return nil, errors.New("invalid token")
 	}
