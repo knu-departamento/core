@@ -37,7 +37,11 @@ func LoggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 	newCtx := context.WithValue(ctx, CtxLoggerMarker{}, CtxLogger{log})
 	res, err := handler(newCtx, req)
 	if err == nil {
-		log.Infof("Successfully finished %s request", method)
+		log.Infof("Request %s finished with code %d", method, codes.OK)
+	} else {
+		if code, ok := status.FromError(err); ok {
+			log.Errorf("Request %s finished with code %d: %s", method, code.Code(), code.Message())
+		}
 	}
 	return res, err
 }
