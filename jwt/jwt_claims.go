@@ -12,6 +12,6 @@ type RoleTokenClaims struct {
 	Type         string `json:"typ"`
 	Email        string `json:"email"`
 	Role         string `json:"rol"`
-	DepartmentId int    `json:"dep_id"`
+	DepartmentId int64    `json:"dep_id"`
 	jwt.StandardClaims
 }
